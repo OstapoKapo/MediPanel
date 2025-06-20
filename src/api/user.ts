@@ -1,5 +1,4 @@
 
-import client from '@/lib/apollo';
 import { gql } from '@apollo/client';
 
 export const REGISTER_MUTATION = gql`
