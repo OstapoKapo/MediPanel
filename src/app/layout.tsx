@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { ApolloProvider } from '@apollo/client';
-import client from '@/lib/apollo';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ApolloWrapper } from "./components/apollowraper/apollowraper";
