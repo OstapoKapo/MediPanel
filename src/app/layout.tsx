@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { ApolloProvider } from '@apollo/client';
+import client from '@/lib/apollo';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ApolloWrapper } from "./components/apollowraper/apollowraper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,9 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <ApolloWrapper>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>
+      </ApolloWrapper>
     </html>
   );
 }
