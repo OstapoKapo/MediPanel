@@ -27,7 +27,7 @@ const SignUpPage = () => {
                router.push('/logIn');
            }
         }catch (error: unknown) {
-           let errorMessage = parseAxiosError(error);
+            const errorMessage = parseAxiosError(error);
             setError(errorMessage); 
         }
     }
