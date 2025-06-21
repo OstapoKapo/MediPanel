@@ -1,6 +1,7 @@
+import { ICreateUser } from '@/types';
 import axiosInstance from '@/utils/restApiConfig';
 
-export async function registerUser(data: { email: string; password: string; role: string }) {
-  const response = await axiosInstance.post('/register', data);
+export async function registerUser(data: ICreateUser) {
+  const response = await axiosInstance.post('/auth/signUp', data);
   return response.data;
 }
