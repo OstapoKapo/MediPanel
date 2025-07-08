@@ -57,7 +57,7 @@ const LogInPage = () => {
                 </div>
                 <button type="submit">Log In</button>
             </form>
-            <Link href="/signUp">Don't have an account? Sign up</Link>
+            <Link href="/signUp">Don&apos;t have an account? Sign up</Link>
         </main>
     );
 }
