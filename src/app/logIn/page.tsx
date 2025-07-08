@@ -53,7 +53,7 @@ const LogInPage = () => {
                         <input className='logInPage__input-password' onChange={handleChange} value={loginData.password} name='password' type={show ? 'text' : 'password'} placeholder="test12312" />
                         <Image onClick={() => setShow(!show)} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
                     </div>
-                    <p>{error}</p>
+                    {error && <p className="error">{error}</p>}
                 </div>
                 <button type="submit">Log In</button>
             </form>
