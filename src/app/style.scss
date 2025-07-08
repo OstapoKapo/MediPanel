@@ -1,8 +1,42 @@
+
+@use  './styles/mixins' as *;
+
 .homePage{
+    @include container();
     width: 100%;
     height: 100vh;
+    gap: 20px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    &__content{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+        & h1{
+            @include text(#F8FAFC, 30px, 700);
+            margin-bottom: 15px;
+            & span{
+                font-weight: 600;
+                color: #5c6bc0;
+            }
+        }
+    }
+    &__img{
+        width: 60%;
+        height: 100%;
+        @include center();
+    }
+    & a {
+        @include filledBtn(45px, 150px);
+        @include text(#F8FAFC, 16px, 700);
+        transition: 0.2s ease-in-out;
+        &:hover{
+            background-color: #5c6bc0;
+            transform: scale(1.05);
+        }
+    }
 }

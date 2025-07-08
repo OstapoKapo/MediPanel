@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./styles/reset.css";
 import { ApolloWrapper } from "./components/apollowraper/apollowraper";
 
 const geistSans = Geist({
