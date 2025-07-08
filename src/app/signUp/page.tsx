@@ -1,6 +1,7 @@
 'use client';
-import Link from 'next/link';
 import './style.scss';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { registerUser } from '@/api/auth';
 import { ICreateUser } from '@/types';
@@ -11,7 +12,8 @@ import { useRouter } from 'next/navigation';
 const SignUpPage = () => {
     const router = useRouter();
 
-    const [user, setUser] = useState<ICreateUser>({
+    const [show, setShow] = useState<boolean>(false);
+    const [signupData, setSignupData] = useState<ICreateUser>({
         email: '',
         password: '',
         role: 'viewer' as 'viewer' | 'admin' | 'superadmin',
@@ -22,7 +24,7 @@ const SignUpPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try{
-           const newUser = await registerUser(user);
+           const newUser = await registerUser(signupData);
            if (newUser) {
                router.push('/logIn');
            }
@@ -34,7 +36,7 @@ const SignUpPage = () => {
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setUser(prev => ({
+        setSignupData(prev => ({
             ...prev,
             [name]: value,
         }));
@@ -42,18 +44,27 @@ const SignUpPage = () => {
 
     return(
         <div className='signUpPage'>
+            <h1>Sign Up</h1>
             <form action="post" onSubmit={handleSubmit}>
-                <input name='email' type="email" value={user.email} onChange={handleChange} placeholder="Email" />
-                <input name='password' type="password" value={user.password} onChange={handleChange} placeholder="Password" />
-                <select name="role" id="" value={user.role} onChange={handleChange}>
-                    <option value="viewer">User</option>
-                    <option value="admin">Admin</option>
-                    <option value="superadmin">Super Admin</option>
-                </select>
-                <button type="submit">Sign Up</button>
+                <div className='signUpPage__inputs'>
+                    <label htmlFor="email">Email:</label>
+                    <input className='signUpPage__input' name='email' type="email" value={signupData.email} onChange={handleChange} placeholder="Example@email.com" />
+                    <label htmlFor="password">Password:</label>
+                    <div className='signUpPage__password'>
+                        <input className='signUpPage__input-password' onChange={handleChange} value={signupData.password} name='password' type={show ? 'text' : 'password'} placeholder="test12312" />
+                        <Image onClick={() => setShow(!show)} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
+                    </div>
+                    <label htmlFor="role">Role:</label>
+                    <select name="role" id="" value={signupData.role} onChange={handleChange}>
+                        <option value="viewer">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="superadmin">Super Admin</option>
+                    </select>
+                </div>
                 {error && <p className="error">{error}</p>}
+                <button type="submit">Sign Up</button>
             </form>
-            <Link href="/logIn">Already have acc</Link>
+            <Link href="/logIn">Already have an account? Log in</Link>
         </div>
     );
 }
