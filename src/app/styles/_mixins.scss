@@ -1,0 +1,44 @@
+// secondary 1E293B, primsary 64748B, background 0F172A, text F8FAFC 
+
+@mixin text($color, $fontSize, $fontWeight) {
+    color: $color;
+    font-size: $fontSize;
+    font-weight: $fontWeight;
+  }
+  
+  @mixin center(){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+ 
+  @mixin row($height){
+    width: 100%;
+    height: $height;
+    display: flex;
+    align-items: center;
+  }
+  
+  @mixin container(){
+    width: 100%;
+    height: calc(100vh - 140px);  
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  @mixin filledBtn($height, $width) {
+    cursor: pointer;
+    width: $width;
+    height: $height;
+    @include center();
+    border-radius: 10px;
+    background-color: #64748B;
+    color: #F8FAFC;
+  }
+  
+  @mixin meadia($width) {
+    @media (max-width: $width){
+      @content;
+    }
+  }
