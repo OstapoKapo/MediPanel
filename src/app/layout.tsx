@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./styles/reset.css";
 import { ApolloWrapper } from "./components/layout/apollowraper/apollowraper";
 
