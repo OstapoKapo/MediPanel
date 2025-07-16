@@ -22,7 +22,7 @@
   
   @mixin container(){
     width: 100%;
-    height: calc(100vh - 140px);  
+    height: 100vh; 
     display: flex;
     align-items: center;
     flex-direction: column;
