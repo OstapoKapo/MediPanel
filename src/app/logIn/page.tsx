@@ -47,10 +47,20 @@ const LogInPage = () => {
             <form action="post" onSubmit={handleSubmit}>
                 <div className='logInPage__inputs'>
                     <label htmlFor="email">Email:</label>
-                    <input className='logInPage__input' onChange={handleChange} value={loginData.email} name='email' type="email" placeholder="Example@email.com" />
+                    <input 
+                    className='logInPage__input' 
+                    onChange={handleChange} 
+                    value={loginData.email} 
+                    name='email' type="email" 
+                    placeholder="Example@email.com" />
                     <label htmlFor="password">Password:</label>
                     <div className='logInPage__password'>
-                        <input className='logInPage__input-password' onChange={handleChange} value={loginData.password} name='password' type={show ? 'text' : 'password'} placeholder="test12312" />
+                        <input 
+                        className='logInPage__input-password' 
+                        onChange={handleChange} 
+                        value={loginData.password} 
+                        name='password' 
+                        type={show ? 'text' : 'password'} placeholder="test12312" />
                         <Image onClick={() => setShow(!show)} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
                     </div>
                     {error && <p className="error">{error}</p>}
