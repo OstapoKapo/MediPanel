@@ -9,7 +9,6 @@ const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<string>('home');
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [highlightY, setHighlightY] = useState<number>(0);
-  const [highlightHeight, setHighlightHeight] = useState<number>(50);
 
   const highlightRef = useRef<HTMLDivElement>(null);
   const buttonRefs = [
@@ -25,6 +24,7 @@ const DashboardPage = () => {
     if (btn) {
       setHighlightY(btn.offsetTop);
     }
+    console.log(currentPage)
   }, [activeIndex]);
 
   
@@ -40,7 +40,7 @@ const DashboardPage = () => {
                 ref={highlightRef}
                 className="dashboardPage__highlight"
                 initial={{y:150}}
-                animate={{ y: highlightY, height: highlightHeight }}
+                animate={{ y: highlightY, height: 50 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 } }
               />
               <li
