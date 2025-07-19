@@ -45,11 +45,11 @@ const DashboardPage = () => {
 
   const logOutMutation = useMutation({
         mutationFn: logOutUser,
-        onSuccess: async (data) => {
+        onSuccess: async () => {
           await queryClient.setQueryData(['session'], null);
           router.push('/');
         },
-        onError: (error: unknown) => {
+        onError: () => {
             alert('Error logging out. Please try again later.');
         },
         retry: false,

@@ -39,7 +39,7 @@ const LogInPage = () => {
 
     const mutation = useMutation({
         mutationFn: loginUser,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['session'] });
             router.push('/dashboard');
         },

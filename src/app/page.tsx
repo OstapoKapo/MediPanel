@@ -21,7 +21,7 @@ export default function Home() {
     if (data && !isLoading) {
       router.push('/dashboard');
     }
-  }, [data, router]);
+  }, [data, router, isLoading]);
 
   if(isLoading && data === undefined) return <p>Loading...</p>
 
