@@ -1,8 +1,31 @@
+'use client'
 import './style.scss';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect } from 'react';
+import { checkAuth } from '@/api/auth';
+import { useRouter } from 'next/navigation';
+import {useQuery} from '@tanstack/react-query';
 
 export default function Home() {
+  const router = useRouter();
+  const { data, isLoading } = useQuery(
+    {
+      queryKey: ['session'],
+      queryFn: checkAuth,
+      retry: false,
+    }
+);
+
+  useEffect(() => {
+    if (data && !isLoading) {
+      router.push('/dashboard');
+    }
+  }, [data, router]);
+
+  if(isLoading && data === undefined) return <p>Loading...</p>
+
+
   return (
     <main className='homePage'>
       <section className='homePage__content'> 
