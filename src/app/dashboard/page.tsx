@@ -4,11 +4,23 @@ import './style.scss';
 import Image from 'next/image';
 import Header from '@/app/components/layout/header/header';
 import { motion } from 'framer-motion';
+import {useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { checkAuth, logOutUser } from '@/api/auth';
+import { useRouter } from 'next/navigation';
 
 const DashboardPage = () => {
+
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [currentPage, setCurrentPage] = useState<string>('home');
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [highlightY, setHighlightY] = useState<number>(0);
+  const { data, isLoading } = useQuery({
+    queryKey: ['session'],
+    queryFn: checkAuth,
+    retry: false,
+  });
 
   const highlightRef = useRef<HTMLDivElement>(null);
   const buttonRefs = [
@@ -24,10 +36,30 @@ const DashboardPage = () => {
     if (btn) {
       setHighlightY(btn.offsetTop);
     }
-    console.log(currentPage)
+    console.log(currentPage);
   }, [activeIndex]);
 
-  
+  useEffect(() => {
+    if (!isLoading && !data) router.push('/');
+  }, [isLoading, data, router]);
+
+  const logOutMutation = useMutation({
+        mutationFn: logOutUser,
+        onSuccess: async () => {
+          await queryClient.setQueryData(['session'], null);
+          router.push('/');
+        },
+        onError: () => {
+            alert('Error logging out. Please try again later.');
+        },
+        retry: false,
+        retryDelay: 1000
+    })
+
+
+  const handleLogOut = async () => {
+    logOutMutation.mutate();
+  }
 
   return (
     <div className="dashboardPage">
@@ -100,7 +132,7 @@ const DashboardPage = () => {
                     <Image src={"/icon/add.svg"} alt='add image' width={30} height={30}/>
                     Add User
                 </li>
-                <li className='dashboardPage__list'>
+                <li onClick={handleLogOut} className='dashboardPage__list'>
                     <Image src={"/icon/log-out.svg"} alt='log out image' width={30} height={30}/>
                     Log Out
                 </li>

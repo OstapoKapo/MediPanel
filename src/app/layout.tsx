@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./styles/reset.css";
 import { ApolloWrapper } from "./components/layout/apollowraper/apollowraper";
+import Query from "./components/layout/QueryClient/QueryClient";
 
 
 // const geistManrope = Geist({
@@ -29,11 +30,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ApolloWrapper>
-      <body className={`${geistMono.variable}`}>
-        {children}
-      </body>
-      </ApolloWrapper>
+        <ApolloWrapper>
+        <body className={`${geistMono.variable}`}>
+          <Query>
+            {children}
+          </Query>
+        </body>
+        </ApolloWrapper>
     </html>
   );
 }

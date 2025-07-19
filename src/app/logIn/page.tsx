@@ -2,14 +2,16 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import './style.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ILoginUser } from '@/types';
-import { loginUser } from '@/api/auth';
+import { checkAuth, loginUser } from '@/api/auth';
 import { useRouter } from 'next/navigation';
 import { parseAxiosError } from '@/utils/parseAxiosError';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const LogInPage = () => {
     const router = useRouter();
+    const queryClient =  useQueryClient();
 
     const [show, setShow] = useState<boolean>(false);
     const [loginData, setLoginData] = useState<ILoginUser>({
@@ -18,31 +20,49 @@ const LogInPage = () => {
     })
     const [error, setError] = useState<string | null>(null);
 
-     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { data, isLoading } = useQuery({
+        queryKey: ['session'],
+        queryFn: checkAuth,
+        retry: false,
+    });
+
+    useEffect(() => {
+        if (data) {
+            router.push('/dashboard');
+        }
+    }, [data, router]);
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setLoginData(prev => ({
-            ...prev,
-            [name]: value,
-        }));
+        setLoginData(prev => ({...prev, [name]: value,}));
     };
+
+    const mutation = useMutation({
+        mutationFn: loginUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['session'] });
+            router.push('/dashboard');
+        },
+        onError: (error: unknown) => {
+            const errorMessage = parseAxiosError(error);
+            setError(errorMessage);
+        },
+        retry: false,
+        retryDelay: 1000
+    })
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        try{
-            console.log(loginData);
-            const identifyUser = await loginUser(loginData);
-            if(identifyUser){
-                router.push('/dashboard');
-            }
-        }catch (error: unknown) {
-            const erroMessage = parseAxiosError(error);
-            setError(erroMessage);
-        }
+        setError(null);
+        mutation.mutate(loginData);
     }
+
+    if(isLoading && data === undefined) return <p>Loading...</p>
+
 
     return(
         <main className='logInPage'>
+
             <h1>Log In</h1>
             <form action="post" onSubmit={handleSubmit}>
                 <div className='logInPage__inputs'>
