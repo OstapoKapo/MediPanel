@@ -1,7 +1,6 @@
 export interface ICreateUser {
     email: string,
-    password: string,
-    role: 'admin' | 'superadmin' | 'viewer'
+    role: 'admin' | 'doctor' | 'viewer'
 }
 export interface ILoginUser{
     email: string,

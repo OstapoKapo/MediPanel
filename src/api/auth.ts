@@ -10,7 +10,16 @@ export const loginUser = async (data: ILoginUser) => {
   return response.data
 }
 
-export const checkAuth = async () => {
+export const checkAuthSSR = async (cookie: string) => {
+  const response = await axiosInstance.get('/auth/checkSession', {
+    headers: {
+      Cookie: cookie,
+    },
+  });
+  return response.data;
+}
+
+export const checkAuthCSR = async () => {
   const response = await axiosInstance.get('/auth/checkSession');
   return response.data;
 }

@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import './style.scss';
 import Image from 'next/image';
 import Header from '@/app/components/layout/header/header';
+import AddUserBlock from '../components/dashboard/addUser/addUser';
 import { motion } from 'framer-motion';
 import {useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { checkAuth, logOutUser } from '@/api/auth';
+import {checkAuthCSR, logOutUser } from '@/api/auth';
 import { useRouter } from 'next/navigation';
+import { Toaster } from 'react-hot-toast';
 
 const DashboardPage = () => {
 
@@ -18,7 +20,7 @@ const DashboardPage = () => {
   const [highlightY, setHighlightY] = useState<number>(0);
   const { data, isLoading } = useQuery({
     queryKey: ['session'],
-    queryFn: checkAuth,
+    queryFn: checkAuthCSR,
     retry: false,
   });
 
@@ -28,6 +30,7 @@ const DashboardPage = () => {
     useRef<HTMLLIElement>(null),
     useRef<HTMLLIElement>(null),
     useRef<HTMLLIElement>(null),
+    useRef<HTMLLIElement>(null), 
     useRef<HTMLLIElement>(null)
   ];
 
@@ -66,8 +69,6 @@ const DashboardPage = () => {
       <Header />
       <div className="dashboardPage__container">
         <aside className="dashboardPage__asideBar">
-          <nav className="dashboardPage__nav">
-            <ul className="dashboardPage__navList">
               <motion.div
                 ref={highlightRef}
                 className="dashboardPage__highlight"
@@ -75,6 +76,8 @@ const DashboardPage = () => {
                 animate={{ y: highlightY, height: 50 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 } }
               />
+          <nav className="dashboardPage__nav">
+            <ul className="dashboardPage__navList">
               <li
                 ref={buttonRefs[0]}
                 onClick={() => {
@@ -128,7 +131,12 @@ const DashboardPage = () => {
             </ul>
           </nav>
           <ul className='dashboardPage__asideButtons'>
-                <li className='dashboardPage__list'>
+                <li
+                  ref={buttonRefs[5]}
+                  onClick={() => {
+                  setCurrentPage('addUser');
+                  setActiveIndex(5);
+                }} className='dashboardPage__list'>
                     <Image src={"/icon/add.svg"} alt='add image' width={30} height={30}/>
                     Add User
                 </li>
@@ -138,8 +146,11 @@ const DashboardPage = () => {
                 </li>
             </ul>
         </aside>
-        <main>{/* Тут контент залежно від currentPage */}</main>
+        <main>
+          <AddUserBlock />
+        </main>
       </div>
+      <Toaster position='top-right' reverseOrder={false}/>
     </div>
   );
 };
