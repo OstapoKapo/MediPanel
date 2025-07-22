@@ -47,4 +47,9 @@
         flex-direction: column;
         gap: 10px;
     }
+    & main{
+        padding: 20px 40px;
+        width: calc(100% - 300px);
+        height: calc(100vh - 85px);
+    }
 }
