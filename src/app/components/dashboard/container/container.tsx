@@ -7,8 +7,8 @@ import { motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { checkAuthCSR, logOutUser } from '@/api/auth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { logOutUser } from '@/api/auth';
 
 
 const DashboardContainer = () => {
