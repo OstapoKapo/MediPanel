@@ -1,6 +1,6 @@
-@use '../styles/mixins' as *;
+@use '../../../styles/mixins' as *;
 
-.dashboardPage{
+.dashboardPage {
     @include container();
     &__container{
         width: 100%;

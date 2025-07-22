@@ -1,41 +1,28 @@
-'use client'
 import './style.scss';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useEffect } from 'react';
-import { checkAuthCSR } from '@/api/auth';
-import { useRouter } from 'next/navigation';
-import {useQuery} from '@tanstack/react-query';
+import { checkAuthSSR } from '@/api/auth';
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+import LoginForm from './components/loginForm/loginForm';
 
-export default function Home() {
-  const router = useRouter();
-  const { data, isLoading } = useQuery(
-    {
-      queryKey: ['session'],
-      queryFn: checkAuthCSR,
-      retry: false,
+export default async function LogInPage() {
+    const headersList = await headers();
+    const cookieHeader = headersList.get('cookie') || '';
+
+    let result = { user: null, error: null };
+    try {
+        result = await checkAuthSSR(cookieHeader);
+    } catch (error) {
+     console.error('Auth check failed:', error);
     }
-);
 
-  useEffect(() => {
-    if (data && !isLoading) {
-      router.push('/dashboard');
+    if (result.user) {
+        redirect('/dashboard');
     }
-  }, [data, router, isLoading]);
 
-  if(isLoading && data === undefined) return <p>Loading...</p>
-
-
-  return (
-    <main className='homePage'>
-      <section className='homePage__content'> 
-        <h1>Welcome, to the <span>MediPanel</span></h1>
-          <Link href="/logIn">Log In</Link>
-          <Link href="/signUp">Sign Up</Link>
-      </section>
-      <figure className="homePage__img">
-        <Image src="/background/hospital-location.png" alt="Decoration" width={500} height={500}  />
-      </figure>
-    </main>
-  );
-}  
+    return (
+        <main className="logInPage">
+            <h1>Welcome to <span>MEDIPANEL</span></h1>
+            <LoginForm />
+        </main>
+    );
+}
