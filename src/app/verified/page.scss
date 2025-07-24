@@ -1,14 +1,7 @@
-@use './styles/mixins' as *;
-
-.logInPage{
+@use '../styles/mixins' as *;
+.verifiedPage{
     @include container();
     justify-content: center;
-    & a {
-        transition: 0.2s ease-in-out;
-        &:hover{
-            color: #5c6bc0;
-        }
-    }
     & h1{
         @include text(#F8FAFC, 38px, 700);
         margin-bottom: 40px;
