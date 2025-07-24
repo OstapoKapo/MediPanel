@@ -28,3 +28,8 @@ export const logOutUser = async () => {
   const response = await axiosInstance.post('/auth/logOut');
   return response.data;
 }
+
+export const changePassword = async (password: string) => {
+  const response = await axiosInstance.post('/auth/changePassword', { password });
+  return response.data;
+}
