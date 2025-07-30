@@ -7,8 +7,7 @@ import { redirect } from 'next/navigation';
 const VerifiedPasswordPage = async () => {
 
     const headersList = await headers();
-    const cookieHeader = headersList.get('cookie') || '';
-    
+    const cookieHeader = headersList.get('cookie') ?? '';    
     let result = { user: null, error: null };
     try {
         result = await checkAuthSSR(cookieHeader);
