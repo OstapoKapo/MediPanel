@@ -1,22 +1,33 @@
 import './style.scss';
-import { checkAuthSSR } from '@/api/auth';
+import { checkAuthSSR, checkVerificationSSR } from '@/api/auth';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import Form from './components/form/form';
 
 export default async function LogInPage() {
     const headersList = await headers();
-    const cookieHeader = headersList.get('cookie') || '';
+    const cookieHeader = headersList.get('cookie') ?? '';
 
-    let result = { user: null, error: null };
+    let authResult = { user: null, error: null };
     try {
-        result = await checkAuthSSR(cookieHeader);
+        authResult = await checkAuthSSR(cookieHeader);
     } catch (error) {
      console.error('Auth check failed:', error);
     }
 
-    if (result.user) {
+    if (authResult.user) {
         redirect('/dashboard');
+    }
+
+    let verifyResult = { userId: null, error: null };
+    try {
+        verifyResult = await checkVerificationSSR(cookieHeader);
+    } catch (error) {
+        console.error('Verify token check failed:', error);
+    }
+
+    if(verifyResult.userId) {
+        redirect('/verified');
     }
 
     return (

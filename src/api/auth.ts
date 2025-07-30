@@ -24,12 +24,21 @@ export const checkAuthCSR = async () => {
   return response.data;
 }
 
+export const checkVerificationSSR = async (cookie: string) => {
+  const response = await axiosInstance.get('/auth/checkVerifyToken', {
+    headers: {
+      Cookie: cookie,
+    },
+  });
+  return response.data;
+}
+
 export const logOutUser = async () => {
   const response = await axiosInstance.post('/auth/logOut');
   return response.data;
 }
 
-export const changePassword = async (password: string) => {
-  const response = await axiosInstance.post('/auth/changePassword', { password });
+export const verifyPassword = async (password: string) => {
+  const response = await axiosInstance.post('/auth/verifyPassword', { password });
   return response.data;
 }

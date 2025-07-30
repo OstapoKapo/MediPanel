@@ -8,7 +8,7 @@ export interface ILoginUser{
 }
 
 export interface IChangePassword {
-    password: string,
+    newPassword: string,
     confirmPassword: string
 }
 export interface IUser{
