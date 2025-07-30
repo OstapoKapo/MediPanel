@@ -19,14 +19,6 @@ const VerifiedPasswordPage = async () => {
     if (result.user) {
         redirect('/dashboard');
     }
-
-    try {
-        await checkVerificationSSR(cookieHeader);
-    } catch (error) {
-        console.error('Verify token check failed:', error);
-        redirect('/'); 
-    }
-
     return (
         <main className='verifiedPage'>
             <h1>Change Your <span>Password</span></h1>
