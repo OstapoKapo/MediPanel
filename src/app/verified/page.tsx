@@ -19,7 +19,6 @@ const VerifiedPage = async () => {
     if (result.user) {
         redirect('/dashboard');
     }
-
     return (
         <main className='verifiedPage'>
             <h1>Change Your <span>Password</span></h1>
