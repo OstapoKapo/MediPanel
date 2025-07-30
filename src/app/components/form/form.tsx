@@ -1,7 +1,7 @@
 'use client'
 import './form.scss'
 import Image from 'next/image';
-import { changePassword, loginUser } from "@/api/auth";
+import { loginUser, verifyPassword } from "@/api/auth";
 import { IChangePassword, ILoginUser } from "@/types";
 import { parseAxiosError } from "@/utils/parseAxiosError";
 import { useMutation } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
-const Form = ({type}: {type: 'login' | 'changePassword'}) => {
+const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
 
     const router = useRouter();
 
@@ -19,7 +19,7 @@ const Form = ({type}: {type: 'login' | 'changePassword'}) => {
         password: ''
     });
     const [passwordData, setPasswordData] = useState<IChangePassword>({
-        password: '',
+        newPassword: '',
         confirmPassword: ''
     });
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ const Form = ({type}: {type: 'login' | 'changePassword'}) => {
         mutationFn: loginUser,
         onSuccess: (data) => {
             if(!data.isVerified){
-                console.log('Please verify your email before logging in.');
+                router.push('/verified');
             }else{
                 router.push('/dashboard');
             }
@@ -41,8 +41,8 @@ const Form = ({type}: {type: 'login' | 'changePassword'}) => {
         retryDelay: 1000
     });
 
-    const changePasswordMutation = useMutation({
-        mutationFn: changePassword,
+    const verifyPasswordMutation = useMutation({
+        mutationFn: verifyPassword,
         onSuccess: () => {
             router.push('/dashboard');
         },
@@ -60,17 +60,17 @@ const Form = ({type}: {type: 'login' | 'changePassword'}) => {
         if(type === 'login'){
             loginMutation.mutate(loginData);
         }else{
-            if(passwordData.password !== passwordData.confirmPassword){
+            if(passwordData.newPassword !== passwordData.confirmPassword){
                 setError('Passwords do not match');
                 return;
             }
-            changePasswordMutation.mutate(passwordData.password);
+            verifyPasswordMutation.mutate(passwordData.newPassword);
         }
     }
 
      const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        if(type === 'changePassword'){
+        if(type === 'verifyPassword'){
             setPasswordData(prev => ({...prev, [name]: value}));
         }else{
             setLoginData(prev => ({...prev, [name]: value,}));
@@ -96,8 +96,7 @@ const Form = ({type}: {type: 'login' | 'changePassword'}) => {
                         value={loginData.password} 
                         name='password' 
                         type={show ? 'text' : 'password'} placeholder="test12312" />
-                        <Image onClick={() => setShow(!show)} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
-                    </div>
+                        <Image onClick={() => { setShow(!show); }} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />                    </div>
                     {error && <p className="error">{error}</p>}
                 </div>
                 <button type="submit">Log In</button>
@@ -105,12 +104,12 @@ const Form = ({type}: {type: 'login' | 'changePassword'}) => {
             (
             <form className='form' action="post" onSubmit={handleSubmit}>
                 <div className='form__inputs'>
-                    <label htmlFor="password">New Password:</label>
+                    <label htmlFor="newPassword">New Password:</label>
                     <input 
                     className='form__input' 
                     onChange={handleChange} 
-                    value={passwordData.password} 
-                    name='password' type="text" 
+                    value={passwordData.newPassword} 
+                    name='newPassword' type="text" 
                     placeholder="test12312" />
                     <label htmlFor="confirmPassword">Confirm Password:</label>
                     <div className='form__password'>
