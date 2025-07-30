@@ -1,10 +1,10 @@
 import { headers } from 'next/headers';
 import Form from '../components/form/form';
 import './page.scss';
-import { checkAuthSSR } from '@/api/auth';
+import { checkAuthSSR, checkVerificationSSR } from '@/api/auth';
 import { redirect } from 'next/navigation';
 
-const VerifiedPage = async () => {
+const VerifiedPasswordPage = async () => {
 
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie') || '';
@@ -20,12 +20,19 @@ const VerifiedPage = async () => {
         redirect('/dashboard');
     }
 
+    try {
+        await checkVerificationSSR(cookieHeader);
+    } catch (error) {
+        console.error('Verify token check failed:', error);
+        redirect('/'); 
+    }
+
     return (
         <main className='verifiedPage'>
             <h1>Change Your <span>Password</span></h1>
-            <Form type='changePassword'/>
+            <Form type='verifyPassword'/>
         </main>
     )
 }
 
-export default VerifiedPage;
+export default VerifiedPasswordPage;

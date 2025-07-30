@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { logOutUser } from '@/api/auth';
+import toast from 'react-hot-toast';
+
 
 
 const DashboardContainer = () => {
@@ -44,8 +46,9 @@ const DashboardContainer = () => {
           await queryClient.setQueryData(['session'], null);
           router.push('/');
         },
-        onError: () => {
-            alert('Error logging out. Please try again later.');
+        onError: (error: unknown) => {
+          console.error('Logout error:', error);
+          toast.error('Failed to log out. Please try again.');
         },
         retry: false,
         retryDelay: 1000
