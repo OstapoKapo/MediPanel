@@ -4,7 +4,7 @@ import { checkAuthSSR } from '@/api/auth';
 import { headers } from 'next/headers';
 
 const DashboardPage = async () => {
-    const headersList =  headers();
+    const headersList = await headers();
     const cookieHeader = headersList.get('cookie') ?? '';
 
     let result = { user: null, error: null };
