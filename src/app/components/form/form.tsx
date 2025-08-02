@@ -2,12 +2,13 @@
 import './form.scss'
 import Image from 'next/image';
 import { loginUser, verifyPassword } from "@/api/auth";
-import { IChangePassword, ILoginUser } from "@/types";
+import { IChangePassword } from "@/types";
 import { parseAxiosError } from "@/utils/parseAxiosError";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import ReCAPTCHA from 'react-google-recaptcha';
+import { AxiosError } from 'axios';
 
 
 const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
@@ -37,7 +38,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                 router.push('/dashboard');
             }
         },
-        onError: (error: any) => {
+        onError: (error: AxiosError) => {
             const attempts = parseInt(localStorage.getItem('loginAttempts') || '0') + 1;
             localStorage.setItem('loginAttempts', attempts.toString());
             const errorMessage = parseAxiosError(error);
@@ -53,7 +54,6 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
             router.push('/dashboard');
         },
         onError: (error: unknown) => {
-            
             const errorMessage = parseAxiosError(error);
             setError(errorMessage);
         },
@@ -70,8 +70,8 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                         captchaToken = await captchaRef.current.executeAsync();
                         captchaRef.current.reset();
                     }
-                } catch (err) {
-                    setError('Будь ласка, пройдіть капчу');
+                } catch {
+                    setError('Please complete the CAPTCHA');
                     return;
                 }
             }
