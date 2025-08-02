@@ -2,19 +2,23 @@
 import './form.scss'
 import Image from 'next/image';
 import { loginUser, verifyPassword } from "@/api/auth";
-import { IChangePassword, ILoginUser } from "@/types";
+import { IChangePassword } from "@/types";
 import { parseAxiosError } from "@/utils/parseAxiosError";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import ReCAPTCHA from 'react-google-recaptcha';
+import { AxiosError } from 'axios';
 
 
 const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
 
     const router = useRouter();
+    
+    const captchaRef = useRef<ReCAPTCHA>(null);
 
-    const [show, setShow] = useState<boolean>(false);
-    const [loginData, setLoginData] = useState<ILoginUser>({
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [loginData, setLoginData] = useState<{email: string, password: string}>({
         email: '',
         password: ''
     });
@@ -27,13 +31,16 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
     const loginMutation = useMutation({
         mutationFn: loginUser,
         onSuccess: (data) => {
+            localStorage.removeItem('loginAttempts');
             if(!data.isVerified){
                 router.push('/verified');
             }else{
                 router.push('/dashboard');
             }
         },
-        onError: (error: unknown) => {
+        onError: (error: AxiosError) => {
+            const attempts = parseInt(localStorage.getItem('loginAttempts') || '0') + 1;
+            localStorage.setItem('loginAttempts', attempts.toString());
             const errorMessage = parseAxiosError(error);
             setError(errorMessage);
         },
@@ -54,17 +61,42 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
         retryDelay: 1000
     });
 
+    const handleLogin = async () => {
+         const attempts = parseInt(localStorage.getItem('loginAttempts') || '0');
+            let captchaToken = null;
+            if (attempts >= 3) {
+                try {
+                    if (captchaRef.current) {
+                        captchaToken = await captchaRef.current.executeAsync();
+                        captchaRef.current.reset();
+                    }
+                } catch {
+                    setError('Please complete the CAPTCHA');
+                    return;
+                }
+            }
+            loginMutation.mutate({
+                email: loginData.email,
+                password: loginData.password,
+                recaptchaToken: captchaToken
+            });
+    }
+
+    const handleVerifyPassword = async () => {
+        if(passwordData.newPassword !== passwordData.confirmPassword){
+                setError('Passwords do not match');
+                return;
+        }
+        verifyPasswordMutation.mutate(passwordData.newPassword);
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
         if(type === 'login'){
-            loginMutation.mutate(loginData);
+            handleLogin();
         }else{
-            if(passwordData.newPassword !== passwordData.confirmPassword){
-                setError('Passwords do not match');
-                return;
-            }
-            verifyPasswordMutation.mutate(passwordData.newPassword);
+            handleVerifyPassword();
         }
     }
 
@@ -95,10 +127,15 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                         onChange={handleChange} 
                         value={loginData.password} 
                         name='password' 
-                        type={show ? 'text' : 'password'} placeholder="test12312" />
-                        <Image onClick={() => { setShow(!show); }} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />                    </div>
+                        type={showPassword ? 'text' : 'password'} placeholder="test12312" />
+                        <Image onClick={() => { setShowPassword(!showPassword); }} src={showPassword ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />                    </div>
                     {error && <p className="error">{error}</p>}
                 </div>
+                <ReCAPTCHA 
+                    sitekey={'6LftUpYrAAAAAIF4fkEqXoYpihaG2XMZIqjGy4y6'}
+                    ref={captchaRef}
+                    size="invisible"
+                />
                 <button type="submit">Log In</button>
             </form> ) : 
             (
@@ -118,8 +155,8 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                         onChange={handleChange} 
                         value={passwordData.confirmPassword} 
                         name='confirmPassword' 
-                        type={show ? 'text' : 'password'} placeholder="test12312" />
-                        <Image onClick={() => setShow(!show)} src={show ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
+                        type={showPassword ? 'text' : 'password'} placeholder="test12312" />
+                        <Image onClick={() => setShowPassword(!showPassword)} src={showPassword ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
                     </div>
                     {error && <p className="error">{error}</p>}
                 </div>

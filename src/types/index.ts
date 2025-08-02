@@ -4,7 +4,8 @@ export interface ICreateUser {
 }
 export interface ILoginUser{
     email: string,
-    password: string
+    password: string,
+    recaptchaToken: string | null
 }
 
 export interface IChangePassword {
