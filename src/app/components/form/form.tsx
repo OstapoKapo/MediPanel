@@ -39,7 +39,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
             }
         },
         onError: (error: AxiosError) => {
-            const attempts = parseInt(localStorage.getItem('loginAttempts') || '0') + 1;
+            const attempts = parseInt(localStorage.getItem('loginAttempts') ?? '0') + 1;
             localStorage.setItem('loginAttempts', attempts.toString());
             const errorMessage = parseAxiosError(error);
             setError(errorMessage);
@@ -62,7 +62,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
     });
 
     const handleLogin = async () => {
-         const attempts = parseInt(localStorage.getItem('loginAttempts') || '0');
+         const attempts = parseInt(localStorage.getItem('loginAttempts') ?? '0');
             let captchaToken = null;
             if (attempts >= 3) {
                 try {
@@ -82,7 +82,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
             });
     }
 
-    const handleVerifyPassword = async () => {
+    const handleVerifyPassword =  () => {
         if(passwordData.newPassword !== passwordData.confirmPassword){
                 setError('Passwords do not match');
                 return;
@@ -94,9 +94,9 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
         e.preventDefault();
         setError(null);
         if(type === 'login'){
-            handleLogin();
+            void handleLogin();
         }else{
-            handleVerifyPassword();
+            void handleVerifyPassword();
         }
     }
 
@@ -156,7 +156,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                         value={passwordData.confirmPassword} 
                         name='confirmPassword' 
                         type={showPassword ? 'text' : 'password'} placeholder="test12312" />
-                        <Image onClick={() => setShowPassword(!showPassword)} src={showPassword ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
+                        <Image onClick={() => {setShowPassword(!showPassword)}} src={showPassword ? "/icon/eye-active.svg" : "/icon/eye-inactive.svg"} alt="Show Password" width={30} height={30} />
                     </div>
                     {error && <p className="error">{error}</p>}
                 </div>
