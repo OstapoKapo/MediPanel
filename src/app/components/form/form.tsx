@@ -33,7 +33,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
         onSuccess: (data) => {
             localStorage.removeItem('loginAttempts');
             if(!data.isVerified){
-                router.push('/verified');
+                router.push('/verifiedPassword');
             }else{
                 router.push('/dashboard');
             }
@@ -87,6 +87,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                 setError('Passwords do not match');
                 return;
         }
+        console.log(passwordData.confirmPassword);
         verifyPasswordMutation.mutate(passwordData.newPassword);
     }
 
@@ -118,7 +119,8 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
                     className='form__input' 
                     onChange={handleChange} 
                     value={loginData.email} 
-                    name='email' type="email" 
+                    name='email' type="email"
+                    maxLength={50} 
                     placeholder="Example@email.com" />
                     <label htmlFor="password">Password:</label>
                     <div className='form__password'>

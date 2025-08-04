@@ -7,10 +7,10 @@ import Form from './components/form/form';
 export default async function LogInPage() {
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie') ?? '';
-
+    const csrfToken = headersList.get('X-CSRF-Token') ?? '';
     let authResult = { user: null, error: null };
     try {
-        authResult = await checkAuthSSR(cookieHeader);
+        authResult = await checkAuthSSR(cookieHeader, csrfToken);
     } catch (error) {
      console.error('Auth check failed:', error);
     }
