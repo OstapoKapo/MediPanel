@@ -7,10 +7,11 @@ import { redirect } from 'next/navigation';
 const VerifiedPasswordPage = async () => {
 
     const headersList = await headers();
-    const cookieHeader = headersList.get('cookie') ?? '';    
+    const cookieHeader = headersList.get('cookie') ?? '';
+    const csrfToken = headersList.get('X-CSRF-Token') ?? '';    
     let result = { user: null, error: null };
     try {
-        result = await checkAuthSSR(cookieHeader);
+        result = await checkAuthSSR(cookieHeader, csrfToken);
     } catch (error) {
         console.error('Auth check failed:', error);
     }

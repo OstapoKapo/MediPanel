@@ -49,12 +49,13 @@ const AddUserBlock = () => {
                 <form action="post" onSubmit={handleSubmit}>
                     <div className='addUserBlock__inputs'>
                         <label htmlFor="email">Email:</label>
-                        <input 
-                            className='addUserBlock__input' 
-                            onChange={handleChange} 
-                            value={userData.email} 
-                            name='email' type="email" 
-                            placeholder="Example@email.com" />                       
+                        <input
+                            className='addUserBlock__input'
+                            onChange={handleChange}
+                            value={userData.email}
+                            name='email' type="email"
+                            placeholder="Example@email.com"
+                            maxLength={50} />
                         <label htmlFor="role">Role:</label>
                         <select name="role">
                             <option value="admin">admin</option>
