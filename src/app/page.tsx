@@ -8,7 +8,7 @@ export default async function LogInPage() {
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie') ?? '';
     const csrfToken = headersList.get('X-CSRF-Token') ?? '';
-    let authResult = { user: null, error: null };
+    const authResult = { user: null, error: null };
     try {
         authResult.user = await checkAuthSSR(cookieHeader, csrfToken);
     } catch (error) {
@@ -19,7 +19,7 @@ export default async function LogInPage() {
         redirect('/dashboard');
     }
 
-    let verifyResult = { verifyToken: null, error: null };
+    const verifyResult = { verifyToken: null, error: null };
     try {
         verifyResult.verifyToken = await checkVerificationSSR(cookieHeader);
     } catch (error) {

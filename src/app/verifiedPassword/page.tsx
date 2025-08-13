@@ -9,7 +9,7 @@ const VerifiedPasswordPage = async () => {
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie') ?? '';
     const csrfToken = headersList.get('X-CSRF-Token') ?? '';    
-    let authResult = { user: null, error: null };
+    const authResult = { user: null, error: null };
     try {
         authResult.user = await checkAuthSSR(cookieHeader, csrfToken);
     } catch (error) {
