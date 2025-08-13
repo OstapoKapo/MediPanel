@@ -8,9 +8,9 @@ export default async function LogInPage() {
     const headersList = await headers();
     const cookieHeader = headersList.get('cookie') ?? '';
     const csrfToken = headersList.get('X-CSRF-Token') ?? '';
-    let authResult = { user: null, error: null };
+    const authResult = { user: null, error: null };
     try {
-        authResult = await checkAuthSSR(cookieHeader, csrfToken);
+        authResult.user = await checkAuthSSR(cookieHeader, csrfToken);
     } catch (error) {
      console.error('Auth check failed:', error);
     }
@@ -19,15 +19,15 @@ export default async function LogInPage() {
         redirect('/dashboard');
     }
 
-    let verifyResult = { userId: null, error: null };
+    const verifyResult = { verifyToken: null, error: null };
     try {
-        verifyResult = await checkVerificationSSR(cookieHeader);
+        verifyResult.verifyToken = await checkVerificationSSR(cookieHeader);
     } catch (error) {
         console.error('Verify token check failed:', error);
     }
 
-    if(verifyResult.userId) {
-        redirect('/verified');
+    if(verifyResult.verifyToken) {
+        redirect('/verifiedPassword');
     }
 
     return (

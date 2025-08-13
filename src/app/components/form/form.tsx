@@ -32,6 +32,7 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
         mutationFn: loginUser,
         onSuccess: (data) => {
             localStorage.removeItem('loginAttempts');
+            console.log(data.isVerified);
             if(!data.isVerified){
                 router.push('/verifiedPassword');
             }else{
