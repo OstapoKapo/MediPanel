@@ -92,13 +92,13 @@ const Form = ({type}: {type: 'login' | 'verifyPassword'}) => {
         verifyPasswordMutation.mutate(passwordData.newPassword);
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit =  (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
         if(type === 'login'){
             void handleLogin();
         }else{
-            void handleVerifyPassword();
+            handleVerifyPassword();
         }
     }
 

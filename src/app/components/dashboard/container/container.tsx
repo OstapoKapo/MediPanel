@@ -33,6 +33,7 @@ const DashboardContainer = () => {
   ];
 
   useEffect(() => {
+    if(activeIndex < 0 || activeIndex >= buttonRefs.length) return;
     const btn = buttonRefs[activeIndex].current;
     if (btn) {
       setHighlightY(btn.offsetTop);
@@ -55,7 +56,7 @@ const DashboardContainer = () => {
     })
 
 
-  const handleLogOut = async () => {
+  const handleLogOut =  () => {
     logOutMutation.mutate();
   }
 
